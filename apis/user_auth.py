@@ -5,7 +5,9 @@ from flask_jwt_extended import (
     create_refresh_token,
     jwt_required,
     get_raw_jwt,
-    get_jti
+    get_jti,
+    jwt_refresh_token_required,
+    get_jwt_identity
 )
 from auth.token_ops import revoke_tokens
 from models.user import User
@@ -68,3 +70,14 @@ class UserAuth(Resource):
         revoke_tokens(access_token_jti, refresh_token_jti)
         return None, 204
 
+
+@api.route('/refresh')
+class RefreshToken(Resource):
+    @api.doc("Refresh Access token")
+    @api.expect(_refresh_token_request, validate=True)
+    @api.response(code=200, model=_refresh_response, description="Refresh Successful")
+    @jwt_refresh_token_required
+    def post(self):
+        email = get_jwt_identity()
+        access_token = create_access_token(identity=email, fresh=False)
+        return {'access_token': access_token}, 201
