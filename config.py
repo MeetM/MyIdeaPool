@@ -3,6 +3,11 @@ from datetime import timedelta
 
 
 class BaseConfig(object):
+    PROPAGATE_EXCEPTIONS = True
+    JWT_PROPAGATE_EXCEPTIONS = True
+    JWT_TOKEN_LOCATION = ['headers', 'json']  # json for delete access-token op
+    JWT_HEADER_NAME = "X-Access-Token"
+    JWT_HEADER_TYPE = ""  # Defaults to Bearer type ("Bearer <JWT>") if not marked empty
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
     JWT_BLACKLIST_ENABLED = True
@@ -37,6 +42,7 @@ class ProdConfig(BaseConfig):
 
 def get_config():
     config_name = os.getenv('FLASK_CONFIGURATION', 'prod')
+    print(config_name)
     if config_name == 'dev':
         return DevelopmentConfig
     else:
