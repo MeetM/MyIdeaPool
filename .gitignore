@@ -1,0 +1,5 @@
+# Intellij Files
+.idea/*
+
+# python virtual env files
+venv/*
