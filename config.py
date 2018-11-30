@@ -3,6 +3,7 @@ from datetime import timedelta
 
 
 class BaseConfig(object):
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     PROPAGATE_EXCEPTIONS = True
     JWT_PROPAGATE_EXCEPTIONS = True
     JWT_TOKEN_LOCATION = ['headers', 'json']  # json for delete access-token op
