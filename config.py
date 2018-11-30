@@ -42,7 +42,6 @@ class ProdConfig(BaseConfig):
 
 def get_config():
     config_name = os.getenv('FLASK_CONFIGURATION', 'prod')
-    print(config_name)
     if config_name == 'dev':
         return DevelopmentConfig
     else:

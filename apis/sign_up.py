@@ -18,7 +18,7 @@ _signup_request = api.model('signup', {
 })
 
 _signup_response = api.model('signup-response', {
-    'access_token': fields.String(required=True, description='Access token for the user'),
+    'jwt': fields.String(required=True, description='Access token for the user'),
     'refresh_token': fields.String(required=True, description='Refresh token for the user')
 })
 
@@ -45,6 +45,6 @@ class SignUp(Resource):
         access_token = create_access_token(identity=user.email, fresh=True)
         refresh_token = create_refresh_token(user.email)
         return {
-                   'access_token': access_token,
+                   'jwt': access_token,
                    'refresh_token': refresh_token
                }, 201

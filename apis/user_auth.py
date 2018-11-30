@@ -22,7 +22,7 @@ _user_login = api.model('User-Login', {
 })
 
 _login_response = api.model('login-response', {
-    'access_token': fields.String(required=True, description='Refresh token for the user'),
+    'jwt': fields.String(required=True, description='Refresh token for the user'),
     'refresh_token': fields.String(required=True, description='Refresh token for the user')
 })
 
@@ -54,7 +54,7 @@ class UserAuth(Resource):
         access_token = create_access_token(identity=user.email, fresh=True)
         refresh_token = create_refresh_token(user.email)
         return {
-                   'access_token': access_token,
+                   'jwt': access_token,
                    'refresh_token': refresh_token
                }, 201
 

@@ -1,5 +1,9 @@
 # Intellij Files
 .idea/*
+__pycache__
 
 # python virtual env files
 venv/*
+
+# flask migrate folder
+migrations/
