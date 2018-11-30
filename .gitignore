@@ -7,3 +7,5 @@ venv/*
 
 # flask migrate folder
 migrations/
+
+.DS_Store
