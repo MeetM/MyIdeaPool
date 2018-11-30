@@ -6,7 +6,7 @@ class BaseConfig(object):
     PROPAGATE_EXCEPTIONS = True
     JWT_PROPAGATE_EXCEPTIONS = True
     JWT_TOKEN_LOCATION = ['headers', 'json']  # json for delete access-token op
-    JWT_HEADER_NAME = "X-Access-Token"
+    JWT_HEADER_NAME = "x-access-token"
     JWT_HEADER_TYPE = ""  # Defaults to Bearer type ("Bearer <JWT>") if not marked empty
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
