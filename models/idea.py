@@ -25,15 +25,7 @@ class Idea(db.Model):
     @classmethod
     def get_idea_json(cls, idea_id):
         idea = cls.query.filter_by(idea_id=idea_id).first()
-        return {
-          "id": idea.idea_id,
-          "content": idea.content,
-          "impact": idea.impact,
-          "ease": idea.ease,
-          "confidence": idea.confidence,
-          "average_score": idea.average_score,
-          "created_at": int(idea.created_at.timestamp())
-        }
+        return Idea._response_marshall(idea)
 
     @classmethod
     def get_idea(cls, idea_id):
@@ -54,15 +46,17 @@ class Idea(db.Model):
         ideas = cls.query.filter_by(user_id=user_id).order_by(Idea.average_score.desc()).paginate(page=page, max_per_page=10)
         response = []
         for idea in ideas.items:
-            response.append(
-                {
-                    "id": idea.idea_id,
-                    "content": idea.content,
-                    "impact": idea.impact,
-                    "ease": idea.ease,
-                    "confidence": idea.confidence,
-                    "average_score": idea.average_score,
-                    "created_at": int(idea.created_at.timestamp())
-                }
-            )
+            response.append(Idea._response_marshall(idea))
         return response
+
+    @staticmethod
+    def _response_marshall(idea):
+        return {
+          "id": idea.idea_id,
+          "content": idea.content,
+          "impact": idea.impact,
+          "ease": idea.ease,
+          "confidence": idea.confidence,
+          "average_score": idea.average_score,
+          "created_at": int(idea.created_at.timestamp())
+        }

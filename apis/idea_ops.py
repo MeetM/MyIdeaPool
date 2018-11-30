@@ -6,6 +6,7 @@ from flask_jwt_extended import (
 from flask import request
 from models import db
 from models.idea import Idea
+from utils.validation_checker import are_idea_params
 
 api = Namespace('ideas', description="Create, update and delete ideas")
 
@@ -46,11 +47,11 @@ class CreateIdeaGetIdeaPage(Resource):
     def post(self):
         data = request.get_json()
         user_id = get_jwt_identity()
-        # TODO idea params validation
+        if not are_idea_params(**data):
+            return {"error": "Input parameters not valid. Scores should be between 1 and 10"}, 400
         idea = Idea(user_id=user_id, **data)
         db.session.add(idea)
         db.session.commit()
-        # TODO implement a object level get idea method
         return Idea.get_idea_json(idea.idea_id), 201
 
     @api.doc("Get Ideas Page")
@@ -63,7 +64,6 @@ class CreateIdeaGetIdeaPage(Resource):
         if data and "page" in data:
             page = data["page"]
         user_id = get_jwt_identity()
-        # TODO idea params validation
         return Idea.get_idea_page(user_id=user_id, page=int(page)), 200
 
 
