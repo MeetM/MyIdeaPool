@@ -26,6 +26,6 @@ class UserProfile(Resource):
     @api.response(code=200, model=_user_profile_response, description="User Profile Info")
     @jwt_required
     def get(self):
-        email = get_jwt_identity()
-        profile_info = User.get_profile_json(email)
+        user_id = get_jwt_identity()
+        profile_info = User.get_profile_json(user_id)
         return profile_info, 200

@@ -7,7 +7,7 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255), nullable=False)
@@ -32,8 +32,8 @@ class User(db.Model):
         return user
 
     @classmethod
-    def get_profile_json(cls, email):
-        user = cls.query.filter_by(email=email).first()
+    def get_profile_json(cls, user_id):
+        user = cls.query.filter_by(user_id=user_id).first()
         md5 = hashlib.md5()
         md5.update(user.email.encode('utf-8'))
         digest = md5.hexdigest()

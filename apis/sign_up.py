@@ -42,8 +42,8 @@ class SignUp(Resource):
         user = User(email=email, password=password, name=data["name"])
         db.session.add(user)
         db.session.commit()
-        access_token = create_access_token(identity=user.email, fresh=True)
-        refresh_token = create_refresh_token(user.email)
+        access_token = create_access_token(identity=user.user_id, fresh=True)
+        refresh_token = create_refresh_token(identity=user.user_id)
         return {
                    'jwt': access_token,
                    'refresh_token': refresh_token

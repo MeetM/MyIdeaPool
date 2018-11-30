@@ -51,8 +51,8 @@ class UserAuth(Resource):
         if not user:
             return {'message': 'Invalid credentials', 'authenticated': False}, 401
 
-        access_token = create_access_token(identity=user.email, fresh=True)
-        refresh_token = create_refresh_token(user.email)
+        access_token = create_access_token(identity=user.user_id, fresh=True)
+        refresh_token = create_refresh_token(user.user_id)
         return {
                    'jwt': access_token,
                    'refresh_token': refresh_token
@@ -78,6 +78,6 @@ class RefreshToken(Resource):
     @api.response(code=200, model=_refresh_response, description="Refresh Successful")
     @jwt_refresh_token_required
     def post(self):
-        email = get_jwt_identity()
-        access_token = create_access_token(identity=email, fresh=False)
+        user_id = get_jwt_identity()
+        access_token = create_access_token(identity=user_id, fresh=False)
         return {'access_token': access_token}, 201
