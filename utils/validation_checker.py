@@ -18,7 +18,7 @@ def is_password_invalid(password):
     return not bool(re.search(r'\d', password))
 
 
-def are_idea_params(impact, ease, confidence):
+def are_idea_params_valid(content, impact, ease, confidence):
     if is_between_1_10(impact) and is_between_1_10(ease) and is_between_1_10(confidence):
         return True
     return False

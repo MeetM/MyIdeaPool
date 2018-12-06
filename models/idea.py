@@ -22,24 +22,20 @@ class Idea(db.Model):
         self.confidence = confidence
         self.average_score = (confidence + ease + impact)/3.0
 
-    @classmethod
-    def get_idea_json(cls, idea_id):
-        idea = cls.query.filter_by(idea_id=idea_id).first()
-        return Idea._response_marshall(idea)
+    def get_idea_json(self):
+        return Idea._response_marshall(self)
+
+    def update_idea(self, content, impact, ease, confidence):
+        self.content = content
+        self.impact = impact
+        self.ease = ease
+        self.confidence = confidence
+        self.average_score = (confidence + ease + impact) / 3.0
+        db.session.commit()
 
     @classmethod
     def get_idea(cls, idea_id):
         return cls.query.filter_by(idea_id=idea_id).first()
-
-    @classmethod
-    def update_idea(cls, idea_id, content, impact, ease, confidence):
-        idea = cls.query.filter_by(idea_id=idea_id).first()
-        idea.content = content
-        idea.impact = impact
-        idea.ease = ease
-        idea.confidence = confidence
-        idea.average_score = (confidence + ease + impact) / 3.0
-        db.session.commit()
 
     @classmethod
     def get_idea_page(cls, user_id, page):

@@ -15,14 +15,14 @@ _user_profile_response = api.model('user-profile-response', {
     'avatar_url': fields.String(required=True, description='Avatar URL'),
 })
 
-_header_parser = api.parser()
-_header_parser.add_argument('X-Access-Token', location='headers')
+access_token_header_parser = api.parser()
+access_token_header_parser.add_argument('x-access-token', location='headers')
 
 
 @api.route('')
 class UserProfile(Resource):
 
-    @api.expect(_header_parser, validate=True)
+    @api.expect(access_token_header_parser, validate=True)
     @api.response(code=200, model=_user_profile_response, description="User Profile Info")
     @jwt_required
     def get(self):

@@ -6,7 +6,7 @@ from flask_jwt_extended import (
 from flask import request
 from models import db
 from models.idea import Idea
-from utils.validation_checker import are_idea_params
+from utils.validation_checker import are_idea_params_valid
 
 api = Namespace('ideas', description="Create, update and delete ideas")
 
@@ -16,6 +16,8 @@ create_idea_model = api.model('create-idea', {
         'ease': fields.Integer(required=True, description='Ease score between 1 to 10'),
         'confidence': fields.Integer(required=True, description='Confidence score between 1 to 10')
     })
+
+update_idea_model = create_idea_model
 
 detail_idea_model = api.model('new-idea', model={
     'id': fields.Integer(required=True, description='Id'),
@@ -47,12 +49,12 @@ class CreateIdeaGetIdeaPage(Resource):
     def post(self):
         data = request.get_json()
         user_id = get_jwt_identity()
-        if not are_idea_params(**data):
+        if not are_idea_params_valid(**data):
             return {"error": "Input parameters not valid. Scores should be between 1 and 10"}, 400
         idea = Idea(user_id=user_id, **data)
         db.session.add(idea)
         db.session.commit()
-        return Idea.get_idea_json(idea.idea_id), 201
+        return idea.get_idea_json(), 201
 
     @api.doc("Get Ideas Page")
     @api.expect(idea_page_req_parser, validate=True)
@@ -84,11 +86,17 @@ class UpdateDeleteIdea(Resource):
         return {"error": "User not authorized to delete the idea"}, 400
 
     @api.doc("Update idea")
-    @api.expect(access_token_header_parser, validate=True)
+    @api.expect(update_idea_model, access_token_header_parser, validate=True)
     @api.response(code=200, model=detail_idea_model, description="Idea updated successfully")
     @jwt_required
     def put(self, idea_id):
         data = request.get_json()
-        Idea.update_idea(int(idea_id), **data)
+        if not are_idea_params_valid(**data):
+            return {"error": "Input parameters not valid. Scores should be between 1 and 10"}, 400
+        user_id = get_jwt_identity()
+        idea = Idea.get_idea(idea_id)
+        if user_id != idea.user_id:
+            return {"error": "User not authorized to update the idea"}, 400
+        idea.update_idea(**data)
 
-        return Idea.get_idea_json(idea_id), 200
+        return idea.get_idea_json(), 200
